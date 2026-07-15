@@ -1,0 +1,3 @@
+method,tp,fp,fn,tn
+Rule-Based,21996,10017,20304,37683
+Graph-Based,26336,5677,15964,42023
