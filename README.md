@@ -2,8 +2,6 @@
 
 This repository contains an independent comparison of rule-based and graph-based methods for detecting post-compromise lateral movement in synthetic enterprise authentication logs.
 
-![Research poster](poster/poster_preview.png)
-
 ## Project overview
 
 The analysis uses a public Kaggle dataset containing:
