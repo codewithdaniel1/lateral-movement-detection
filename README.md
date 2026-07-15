@@ -1,25 +1,57 @@
 # Graph-Based Lateral Movement Detection
 
-Independent evaluation of rule-based and graph-based approaches for detecting post-compromise lateral movement in synthetic enterprise authentication logs.
+This repository contains an independent comparison of rule-based and graph-based methods for detecting post-compromise lateral movement in synthetic enterprise authentication logs.
 
 ![Research poster](poster/poster_preview.png)
 
 ## Project overview
 
-This project analyzes **180,000 synthetic authentication events** spanning 30 days. The dataset contains 498 active users, 150 hosts, and 16,391 labeled attack chains aligned with MITRE ATT&CK techniques **T1078 Valid Accounts** and **T1021 Remote Services**.
+The analysis uses a public Kaggle dataset containing:
 
-The analysis compares:
+- 180,000 authentication events
+- 498 active users
+- 150 hosts
+- 16,391 labeled attack chains
+- MITRE ATT&CK techniques T1078 and T1021
+- 30 days of simulated enterprise activity
 
-- A two-rule baseline that flags new user-to-host connections and unseen source subnets
-- A graph-based detector using edge novelty, path rarity, and host degree deviation
-- An equal-alert evaluation in which both detectors generate 32,013 alerts
+The notebook downloads the dataset directly from Kaggle and evaluates both detectors on a chronologically held-out test period.
+
+## Detection methods
+
+### Rule-based baseline
+
+The baseline flags:
+
+1. A user's first observed login to a destination host
+2. A login from a previously unseen source subnet
+
+### Graph-based method
+
+The graph-based model combines:
+
+- Edge novelty
+- Path rarity toward the domain controller
+- Host degree deviation
+
+Logistic regression learns the feature weights from the fit period.
+
+## Evaluation design
+
+The dataset is divided chronologically:
+
+- Baseline period: 42,000 events
+- Fit period: 48,000 events
+- Held-out test period: 90,000 events
+
+For the primary comparison, both methods generate exactly **32,013 alerts**, creating an equal analyst-review budget.
 
 ## Held-out test results
 
 | Method | Precision | Recall | False-positive rate |
 |---|---:|---:|---:|
-| Rule-Based | 0.6871 | 0.5200 | 0.2100 |
-| Graph-Based | 0.8227 | 0.6226 | 0.1190 |
+| Rule-Based | 0.687 | 0.520 | 0.210 |
+| Graph-Based | 0.823 | 0.623 | 0.119 |
 
 ### Confusion matrices
 
@@ -28,7 +60,7 @@ The analysis compares:
 | Rule-Based | 21,996 | 10,017 | 20,304 | 37,683 |
 | Graph-Based | 26,336 | 5,677 | 15,964 | 42,023 |
 
-Under the same analyst-review budget, the graph-based detector achieved higher precision and recall while reducing the false-positive rate.
+Under the same alert budget, the graph-based method detects more malicious events and produces fewer false positives.
 
 ## Repository contents
 
@@ -37,7 +69,7 @@ Under the same analyst-review budget, the graph-based detector achieved higher p
 ├── README.md
 ├── requirements.txt
 ├── notebooks/
-│   └── lateral_movement_independent_analysis.ipynb
+│   └── lateral_movement_detection_analysis.ipynb
 ├── poster/
 │   ├── lateral_movement_poster.pdf
 │   ├── lateral_movement_poster_editable.pptx
@@ -48,8 +80,7 @@ Under the same analyst-review budget, the graph-based detector achieved higher p
 │   └── README.md
 └── results/
     ├── performance_metrics.csv
-    ├── confusion_matrices.csv
-    └── attack_diagnostics.csv
+    └── confusion_matrices.csv
 ```
 
 ## Run the notebook
@@ -60,49 +91,35 @@ Install the dependencies:
 pip install -r requirements.txt
 ```
 
-Open the notebook:
+Then launch Jupyter:
 
 ```bash
-jupyter notebook notebooks/lateral_movement_independent_analysis.ipynb
+jupyter notebook notebooks/lateral_movement_detection_analysis.ipynb
 ```
 
-The notebook downloads the public dataset directly from Kaggle using `kagglehub`:
+The notebook downloads the public dataset with:
 
 ```python
-dataset_path = kagglehub.dataset_download(
-    "danielpeng1995/synthetic-enterprise-auth-logs"
+dataset_path = Path(
+    kagglehub.dataset_download(
+        "danielpeng1995/synthetic-enterprise-auth-logs"
+    )
 )
 ```
 
 ## Dataset
 
-The CSV is maintained on Kaggle rather than duplicated in this repository:
+The dataset is hosted on Kaggle:
 
 https://www.kaggle.com/datasets/danielpeng1995/synthetic-enterprise-auth-logs
 
-See [`docs/DATASET.md`](docs/DATASET.md) for the dataset description, experimental structure, fields, intended uses, and limitations.
+The CSV is not duplicated in this repository. See [`docs/DATASET.md`](docs/DATASET.md) for the complete dataset description and limitations.
 
-## Methodology
+## Limitations
 
-The events are split chronologically:
+This is a synthetic, attack-enriched dataset with self-authored ground truth. It is appropriate for controlled experimentation, education, and prototyping, but it does not establish real-world production performance.
 
-- Days 1 through 7 establish baseline behavior
-- Days 8 through 15 fit the graph model
-- Days 16 through 30 form the held-out test period
-
-The graph-based model uses:
-
-- **Edge novelty:** whether a user-to-host relationship is new
-- **Path rarity:** whether an event moves toward the domain controller through an unusual graph path
-- **Degree deviation:** whether a host experiences an abnormal increase in distinct users
-
-Logistic regression combines the features into an anomaly score. The primary comparison matches the graph detector's alert count to the rule-based baseline.
-
-## Scope and limitations
-
-This is a synthetic, attack-enriched benchmark with self-authored ground truth. It is useful for prototyping, teaching, and controlled comparison, but it is not evidence of production performance.
-
-The baseline is deliberately simple and does not represent a modern commercial UEBA platform. The next step is validation against real authentication data or established public corpora such as LANL or CERT.
+The rule-based baseline is intentionally simple and should not be interpreted as a modern commercial UEBA system.
 
 ## Author
 

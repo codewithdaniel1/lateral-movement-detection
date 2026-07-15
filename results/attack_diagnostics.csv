@@ -1,5 +1,0 @@
-measure,rule_based,graph_based
-T1021 event recall,0.5196,0.622
-T1078 event recall,0.5212,0.6243
-Attack-chain detection rate,0.9414,0.9737
-Malicious DC-target recall,1.0,0.6558
