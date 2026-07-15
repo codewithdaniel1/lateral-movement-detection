@@ -69,9 +69,7 @@ Under the same alert budget, the graph-based method detects more malicious event
 ├── notebooks/
 │   └── lateral_movement_detection_analysis.ipynb
 ├── poster/
-│   ├── lateral_movement_poster.pdf
-│   ├── lateral_movement_poster_editable.pptx
-│   └── poster_preview.png
+│   └── lateral_movement_poster.pdf
 ├── docs/
 │   └── DATASET.md
 ├── data/
