@@ -98,7 +98,7 @@ The notebook downloads the public dataset with:
 ```python
 dataset_path = Path(
     kagglehub.dataset_download(
-        "danielpeng1995/synthetic-enterprise-auth-logs"
+        "codewithdaniel1/synthetic-enterprise-auth-logs"
     )
 )
 ```
@@ -107,7 +107,7 @@ dataset_path = Path(
 
 The dataset is hosted on Kaggle:
 
-https://www.kaggle.com/datasets/danielpeng1995/synthetic-enterprise-auth-logs
+https://www.kaggle.com/datasets/codewithdaniel1/synthetic-enterprise-auth-logs
 
 The CSV is not duplicated in this repository. See [`docs/DATASET.md`](docs/DATASET.md) for the complete dataset description and limitations.
 

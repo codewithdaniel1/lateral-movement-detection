@@ -17,4 +17,4 @@ The Synthetic Enterprise Authentication Logs dataset is released under
 Creative Commons Attribution 4.0 International (CC BY 4.0).
 
 Dataset page:
-https://www.kaggle.com/datasets/danielpeng1995/synthetic-enterprise-auth-logs
+https://www.kaggle.com/datasets/codewithdaniel1/synthetic-enterprise-auth-logs
